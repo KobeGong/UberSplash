@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,9 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             window.setFlags(
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//            window.setFlags(
+//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
@@ -85,6 +86,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         contianer = (ViewGroup) findViewById(R.id.container);
         formView = (FormView) findViewById(R.id.formView);
         appName = (TextView) findViewById(R.id.appName);
+        formView.post(new Runnable() {
+            @Override
+            public void run() {
+                int delta = formView.getTop()+formView.getHeight();
+                formView.setTranslationY(-1 * delta);
+            }
+        });
     }
 
     private void initView() {
@@ -127,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             InputStream in = getResources().openRawResource(R.raw.welcome_video);
             byte[] buff = new byte[1024];
             int len = 0;
-            while ((len = in.read(buff)) != 0) {
+            while ((len = in.read(buff)) != -1) {
                 fos.write(buff, 0, len);
             }
         } catch (FileNotFoundException e) {
@@ -153,8 +161,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (inputType) {
             case NONE:
 
-
-                formView.setTranslationY(-1*delta);
                 formView.animate().translationY(0).alpha(1).setDuration(500).start();
                 if (view == buttonLeft) {
                     inputType = InputType.LOGIN;
@@ -169,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case LOGIN:
 
-                formView.animate().translationY(-1*delta).alpha(0).setDuration(500).start();
+                formView.animate().translationY(-1 * delta).alpha(0).setDuration(500).start();
                 if (view == buttonLeft) {
 
                 } else if (view == buttonRight) {
@@ -181,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case SIGN_UP:
 
-                formView.animate().translationY(-1*delta).alpha(0).setDuration(500).start();
+                formView.animate().translationY(-1 * delta).alpha(0).setDuration(500).start();
                 if (view == buttonLeft) {
 
                 } else if (view == buttonRight) {
